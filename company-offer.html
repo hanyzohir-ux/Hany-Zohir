@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إرسال عرض عمل</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background-color: #f9f9f9; }
+    h2, h3 { text-align: center; }
+    .worker-info {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+    textarea, button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>إرسال عرض عمل</h2>
+
+  <div class="worker-info" id="workerDetails">
+    <h3>بيانات العامل المختار</h3>
+    <!-- يتم تعبئتها ديناميكيًا -->
+  </div>
+
+  <textarea id="offerText" placeholder="اكتب تفاصيل العرض هنا..."></textarea>
+  <button onclick="sendOffer()">إرسال العرض</button>
+
+  <script>
+    window.onload = function () {
+      const worker = JSON.parse(localStorage.getItem('selectedWorker'));
+      const container = document.getElementById('workerDetails');
+
+      if (!worker) {
+        container.innerHTML = "<p>لا يوجد عامل مختار.</p>";
+        return;
+      }
+
+      container.innerHTML = `
+        <strong>الاسم:</strong> ${worker.name}<br>
+        <strong>الوظيفة:</strong> ${worker.job}<br>
+        <strong>سنوات الخبرة:</strong> ${worker.years}<br>
+        <strong>الخبرات:</strong> ${worker.skills}<br>
+      `;
+    };
+
+    function sendOffer() {
+      const offerText = document.getElementById('offerText').value.trim();
+      const worker = JSON.parse(localStorage.getItem('selectedWorker'));
+      const company = JSON.parse(localStorage.getItem('loggedCompany'));
+
+      if (!offerText) {
+        alert("يرجى كتابة تفاصيل العرض");
+        return;
+      }
+
+      const offer = {
+        to: worker.name,
+        from: company.name,
+        details: offerText,
+        date: new Date().toLocaleString()
+      };
+
+      let offers = JSON.parse(localStorage.getItem('offers')) || [];
+      offers.push(offer);
+      localStorage.setItem('offers', JSON.stringify(offers));
+
+      alert("تم إرسال العرض بنجاح");
+      window.location.href = "company-dashboard.html";
+    }
+  </script>
+</body>
+</html>

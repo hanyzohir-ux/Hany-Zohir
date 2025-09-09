@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طلبات التوظيف</title>
+  <style>
+    body { padding: 30px; background-color: #fff; font-family: Arial; }
+    h2 { text-align: center; }
+    #companyNameDisplay {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+    select, button {
+      display: block;
+      margin: 15px auto;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>طلب وظيفة جديدة</h2>
+  <div id="companyNameDisplay"></div>
+
+  <label>الوظيفة المطلوبة:</label>
+  <select id="jobFilter">
+    <option value="">-- اختر الوظيفة --</option>
+    <option>مهندس ميكانيكا</option>
+    <option>مهندس كهرباء</option>
+    <option>مهندس مدني</option>
+    <option>مهندس برمجيات</option>
+    <option>فني صيانة</option>
+    <option>محاسب</option>
+  </select>
+
+  <label>سنوات الخبرة من:</label>
+  <select id="expFrom">
+    <option value="">-- من --</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>10</option>
+  </select>
+
+  <label>سنوات الخبرة إلى:</label>
+  <select id="expTo">
+    <option value="">-- إلى --</option>
+    <option>2</option>
+    <option>3</option>
+    <option>5</option>
+    <option>10</option>
+    <option>15</option>
+  </select>
+
+  <button onclick="saveRequest()">أظهر النتائج</button>
+
+  <script>
+    // عرض اسم الشركة
+    window.onload = function () {
+      const company = JSON.parse(localStorage.getItem('loggedCompany'));
+      if (company) {
+        document.getElementById('companyNameDisplay').textContent = `مرحبًا بك، ${company.name}`;
+      } else {
+        alert("لم يتم تسجيل الدخول");
+        window.location.href = "company-login.html";
+      }
+    };
+
+    // حفظ الطلبات مؤقتًا
+    function saveRequest() {
+      const job = document.getElementById('jobFilter').value;
+      const from = document.getElementById('expFrom').value;
+      const to = document.getElementById('expTo').value;
+
+      const request = {
+        job,
+        experienceFrom: from,
+        experienceTo: to,
+        company: JSON.parse(localStorage.getItem('loggedCompany')).name
+      };
+
+      localStorage.setItem('lastCompanyRequest', JSON.stringify(request));
+      window.location.href = "company-results.html";
+    }
+  </script>
+</body>
+</html>

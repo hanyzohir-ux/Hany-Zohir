@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دخول الأدمن</title>
+  <style>
+    body { text-align: center; padding: 50px; background-color: #f0f0f0; font-family: Arial; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>دخول الأدمن</h2>
+  <input type="password" placeholder="أدخل كلمة المرور" id="adminPassword">
+  <button onclick="checkPassword()">دخول</button>
+
+  <script>
+    function checkPassword() {
+      const password = document.getElementById('adminPassword').value;
+      if (password === "Hany@0712") {
+        window.location.href = "admin-panel.html";
+      } else {
+        alert("كلمة المرور غير صحيحة");
+      }
+    }
+  </script>
+</body>
+</html>

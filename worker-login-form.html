@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول للعامل</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background-color: #f9f9f9; }
+    input, textarea, button, select {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .experience-block {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #fff;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>تسجيل الدخول للعامل</h2>
+
+  <input type="text" id="workerName" placeholder="الاسم بالكامل">
+  <input type="tel" id="workerPhone" placeholder="رقم التليفون">
+  <input type="email" id="workerEmail" placeholder="الإيميل">
+  <input type="text" id="workerJob" placeholder="الوظيفة">
+  <input type="number" id="workerYears" placeholder="عدد سنوات الخبرة">
+  <textarea id="workerSkills" placeholder="الخبرات العامة"></textarea>
+
+  <div id="experienceContainer">
+    <div class="experience-block">
+      <input type="text" placeholder="اسم الشركة">
+      <input type="text" placeholder="الوظيفة">
+      <input type="text" placeholder="الفترة من">
+      <input type="text" placeholder="الفترة إلى">
+      <textarea placeholder="المهام الوظيفية"></textarea>
+    </div>
+  </div>
+
+  <button onclick="addExperience()">+ إضافة خبرة أخرى</button>
+  <button onclick="saveWorkerData()">💾 حفظ البيانات</button>
+
+  <script>
+    function addExperience() {
+      const container = document.getElementById('experienceContainer');
+      const block = document.createElement('div');
+      block.className = 'experience-block';
+      block.innerHTML = `
+        <input type="text" placeholder="اسم الشركة">
+        <input type="text" placeholder="الوظيفة">
+        <input type="text" placeholder="الفترة من">
+        <input type="text" placeholder="الفترة إلى">
+        <textarea placeholder="المهام الوظيفية"></textarea>
+      `;
+      container.appendChild(block);
+    }
+
+    function saveWorkerData() {
+      const data = {
+        name: document.getElementById('workerName').value,
+        phone: document.getElementById('workerPhone').value,
+        email: document.getElementById('workerEmail').value,
+        job: document.getElementById('workerJob').value,
+        years: document.getElementById('workerYears').value,
+        skills: document.getElementById('workerSkills').value,
+        experiences: []
+      };
+
+      const blocks = document.querySelectorAll('.experience-block');
+      blocks.forEach(block => {
+        const inputs = block.querySelectorAll('input, textarea');
+        data.experiences.push({
+          company: inputs[0].value,
+          role: inputs[1].value,
+          from: inputs[2].value,
+          to: inputs[3].value,
+          tasks: inputs[4].value
+        });
+      });
+
+      localStorage.setItem('workerData', JSON.stringify(data));
+      alert('تم حفظ البيانات بنجاح');
+    }
+
+    // تحميل البيانات عند الدخول
+    window.onload = function () {
+      const saved = localStorage.getItem('workerData');
+      if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById('workerName').value = data.name;
+        document.getElementById('workerPhone').value = data.phone;
+        document.getElementById('workerEmail').value = data.email;
+        document.getElementById('workerJob').value = data.job;
+        document.getElementById('workerYears').value = data.years;
+        document.getElementById('workerSkills').value = data.skills;
+
+        const container = document.getElementById('experienceContainer');
+        container.innerHTML = '';
+        data.experiences.forEach(exp => {
+          const block = document.createElement('div');
+          block.className = 'experience-block';
+          block.innerHTML = `
+            <input type="text" value="${exp.company}" placeholder="اسم الشركة">
+            <input type="text" value="${exp.role}" placeholder="الوظيفة">
+            <input type="text" value="${exp.from}" placeholder="الفترة من">
+            <input type="text" value="${exp.to}" placeholder="الفترة إلى">
+            <textarea placeholder="المهام الوظيفية">${exp.tasks}</textarea>
+          `;
+          container.appendChild(block);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

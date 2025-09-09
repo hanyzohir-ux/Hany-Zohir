@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>نتائج البحث</title>
+  <style>
+    body { padding: 20px; background-color: #f9f9f9; font-family: Arial; }
+    h2 { text-align: center; }
+    .worker-card {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+    .select-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>نتائج البحث المطابقة</h2>
+  <div id="results"></div>
+
+  <script>
+    window.onload = function () {
+      const request = JSON.parse(localStorage.getItem('lastCompanyRequest'));
+      const worker = JSON.parse(localStorage.getItem('workerData'));
+      const resultsDiv = document.getElementById('results');
+
+      if (!request || !worker) {
+        resultsDiv.innerHTML = "<p>لا توجد بيانات للعرض.</p>";
+        return;
+      }
+
+      const jobMatch = request.job ? worker.job === request.job : true;
+      const years = parseInt(worker.years);
+      const from = parseInt(request.experienceFrom);
+      const to = parseInt(request.experienceTo);
+      const expMatch = (!isNaN(from) && !isNaN(to)) ? (years >= from && years <= to) : true;
+
+      if (jobMatch && expMatch) {
+        const card = document.createElement('div');
+        card.className = 'worker-card';
+        card.innerHTML = `
+          <strong>الاسم:</strong> ${worker.name}<br>
+          <strong>الوظيفة:</strong> ${worker.job}<br>
+          <strong>سنوات الخبرة:</strong> ${worker.years}<br>
+          <strong>الخبرات:</strong> ${worker.skills}<br>
+          <button class="select-btn" onclick="selectWorker()">اختيار هذا العامل</button>
+        `;
+        resultsDiv.appendChild(card);
+      } else {
+        resultsDiv.innerHTML = "<p>لا توجد نتائج مطابقة للتصفية المطلوبة.</p>";
+      }
+    };
+
+    function selectWorker() {
+      const worker = JSON.parse(localStorage.getItem('workerData'));
+      localStorage.setItem('selectedWorker', JSON.stringify(worker));
+      window.location.href = "company-offer.html";
+    }
+  </script>
+</body>
+</html>

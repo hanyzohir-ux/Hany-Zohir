@@ -1,0 +1,88 @@
+<!-- worker-offers.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>عروض العمل الواردة</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background-color: #f9f9f9; }
+    h2 { text-align: center; }
+    .offer-card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .accept { background-color: #28a745; color: white; }
+    .reject { background-color: #dc3545; color: white; }
+  </style>
+</head>
+<body>
+  <h2>عروض العمل الواردة</h2>
+  <div id="offersContainer"></div>
+
+  <script>
+    window.onload = function () {
+      const worker = JSON.parse(localStorage.getItem('workerData'));
+      const offers = JSON.parse(localStorage.getItem('offers')) || [];
+      const container = document.getElementById('offersContainer');
+
+      const relevantOffers = offers.filter(offer => offer.to === worker.name);
+
+      if (relevantOffers.length === 0) {
+        container.innerHTML = "<p>لا توجد عروض حالياً.</p>";
+        return;
+      }
+
+      relevantOffers.forEach((offer, index) => {
+        const card = document.createElement('div');
+        card.className = 'offer-card';
+        card.innerHTML = `
+          <strong>من الشركة:</strong> ${offer.from}<br>
+          <strong>تاريخ الإرسال:</strong> ${offer.date}<br>
+          <strong>تفاصيل العرض:</strong><br>
+          <p>${offer.details}</p>
+          <div class="actions">
+            <button class="btn accept" onclick="respond(${index}, true)">موافق</button>
+            <button class="btn reject" onclick="respond(${index}, false)">غير موافق</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    };
+
+    function respond(index, accepted) {
+      const offers = JSON.parse(localStorage.getItem('offers')) || [];
+      const offer = offers[index];
+      offer.response = accepted ? "موافق" : "غير موافق";
+
+      // إرسال إشعار للش الشركة
+      let notifications = JSON.parse(localStorage.getItem('companyNotifications')) || [];
+      if (accepted) {
+        notifications.push({
+          company: offer.from,
+          message: `العامل ${offer.to} وافق على العرض بتاريخ ${offer.date}`
+        });
+      }
+
+      localStorage.setItem('offers', JSON.stringify(offers));
+      localStorage.setItem('companyNotifications', JSON.stringify(notifications));
+      alert("تم تسجيل ردك بنجاح");
+      location.reload();
+    }
+  </script>
+</body>
+</html>

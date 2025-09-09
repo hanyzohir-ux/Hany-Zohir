@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مراجعة العروض من قبل الأدمن</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background-color: #f9f9f9; }
+    h2 { text-align: center; }
+    .offer-card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+    .status {
+      font-weight: bold;
+      color: #007bff;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>مراجعة العروض المرسلة</h2>
+  <div id="offersContainer"></div>
+
+  <script>
+    window.onload = function () {
+      const offers = JSON.parse(localStorage.getItem('offers')) || [];
+      const container = document.getElementById('offersContainer');
+
+      if (offers.length === 0) {
+        container.innerHTML = "<p>لا توجد عروض حالياً.</p>";
+        return;
+      }
+
+      offers.forEach((offer, index) => {
+        const card = document.createElement('div');
+        card.className = 'offer-card';
+        card.innerHTML = `
+          <strong>اسم العامل:</strong> ${offer.to}<br>
+          <strong>اسم الشركة:</strong> ${offer.from}<br>
+          <strong>تاريخ الإرسال:</strong> ${offer.date}<br>
+          <strong>تفاصيل العرض:</strong><br>
+          <p>${offer.details}</p>
+          <div class="status">
+            حالة الرد: ${offer.response ? offer.response : "لم يتم الرد بعد"}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

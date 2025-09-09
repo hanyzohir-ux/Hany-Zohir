@@ -1,0 +1,51 @@
+<!-- worker-register.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل عامل جديد</title>
+  <style>
+    body { text-align: center; padding: 50px; background-color: #fff; font-family: Arial; }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>تسجيل مستخدم جديد</h2>
+  <input type="text" placeholder="الاسم بالكامل" id="fullName">
+  <input type="tel" placeholder="رقم التليفون" id="phone">
+  <button onclick="registerUser()">تسجيل</button>
+  <button id="goToProfile" style="display:none;" onclick="window.location.href='worker-login-form.html'">الذهاب إلى صفحتي الشخصية</button>
+
+  <script>
+    function registerUser() {
+      const name = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!name || !phone) {
+        alert("يرجى إدخال الاسم ورقم التليفون");
+        return;
+      }
+
+      const worker = {
+        name,
+        phone
+      };
+
+      localStorage.setItem('registeredWorker', JSON.stringify(worker));
+      alert("تم التسجيل بنجاح");
+      document.getElementById('goToProfile').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
